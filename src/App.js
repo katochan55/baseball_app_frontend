@@ -5,7 +5,7 @@ async function getTeams() {
   return await axios.get("/api/teams");
 }
 
-function App() {
+function useApp() {
   const [teams, setTeams] = useState([]);
 
   useEffect(() => {
@@ -15,6 +15,11 @@ function App() {
     });
   }, []);
 
+  return { teams };
+}
+
+function App() {
+  const { teams } = useApp();
   return (
     <ul>
       {teams.map((team) => {
