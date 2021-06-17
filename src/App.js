@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { axios } from "./setup/axios";
 import camelize from "camelize";
+import { TeamTable } from "./TeamTable";
 
 async function getTeams() {
   return await axios.get("/api/teams");
@@ -39,33 +40,22 @@ function useApp() {
   return { sortedCentralTeams, sortedPacificTeams };
 }
 
-function Team({ team }) {
-  return (
-    <li>
-      {team.name}, {team.foundedYear}, {team.result.rank}
-    </li>
-  );
-}
-
 function App() {
   const { sortedCentralTeams, sortedPacificTeams } = useApp();
   return (
-    <div className="container mt-5">
+    <div className="container mx-7 my-7">
+      <header className="text-3xl mb-7">チーム成績</header>
+      <select className="text-2xl border mb-7">
+        <option value="2020">2020</option>
+      </select>
+      <span className="text-2xl">年成績</span>
       <section>
-        <h2>セ・リーグ</h2>
-        <ul>
-          {sortedCentralTeams.map((team) => {
-            return <Team team={team} key={`c-${team.id}`} />;
-          })}
-        </ul>
+        <p className="text-3xl">セ・リーグ順位表</p>
+        <TeamTable teams={sortedCentralTeams} color="green" />
       </section>
-      <section className="mt-4">
-        <h2>パ・リーグ</h2>
-        <ul>
-          {sortedPacificTeams.map((team) => {
-            return <Team team={team} key={`p-${team.id}`} />;
-          })}
-        </ul>
+      <section className="mt-7">
+        <p className="text-3xl">パ・リーグ順位表</p>
+        <TeamTable teams={sortedPacificTeams} color="blue" />
       </section>
     </div>
   );
