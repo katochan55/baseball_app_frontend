@@ -1,4 +1,6 @@
 export function TeamTable({ teams, color }) {
+  const topWinsCount = teams[0]?.result.winsCount;
+  const topLosesCount = teams[0]?.result.losesCount;
   return (
     <table className="table-fixed w-3/5 my-3 border-collapse border">
       <thead>
@@ -18,12 +20,23 @@ export function TeamTable({ teams, color }) {
             負
           </th>
           <th className="w-1/8 border text-lg text-gray-500 font-normal px-2 py-1">
-            創立年
+            勝率
+          </th>
+          <th className="w-1/8 border text-lg text-gray-500 font-normal px-2 py-1">
+            差
           </th>
         </tr>
       </thead>
       <tbody>
         {teams.map((team) => {
+          const winsCount = team.result.winsCount;
+          const losesCount = team.result.losesCount;
+          const winRate = `.${Math.trunc(
+            (winsCount / (winsCount + losesCount)) * 1000
+          )}`;
+          const gamesBehind =
+            (topWinsCount - topLosesCount - (winsCount - losesCount)) / 2;
+          const formattedGamesBehind = gamesBehind === 0 ? "-" : gamesBehind;
           return (
             <tr key={team.id}>
               <th className="border text-xl font-normal px-2 py-1">
@@ -33,13 +46,16 @@ export function TeamTable({ teams, color }) {
                 {team.name}
               </th>
               <th className="border text-xl font-normal px-2 py-1">
-                {team.result.winsCount}
+                {winsCount}
               </th>
               <th className="border text-xl font-normal px-2 py-1">
-                {team.result.losesCount}
+                {losesCount}
               </th>
               <th className="border text-xl font-normal px-2 py-1">
-                {team.foundedYear}
+                {winRate}
+              </th>
+              <th className="border text-xl font-normal px-2 py-1">
+                {formattedGamesBehind}
               </th>
             </tr>
           );
