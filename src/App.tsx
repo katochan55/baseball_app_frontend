@@ -2,31 +2,40 @@ import { useState, useEffect } from "react";
 import { axios } from "./setup/axios";
 import camelize from "camelize";
 import { TeamTable } from "./TeamTable";
+import { TeamWithMultipleResultType, TeamWithSingleResultType } from "./types";
 
 async function getTeams() {
   return await axios.get("/api/teams");
 }
 
-function ExtractByYear(teams, year) {
+function ExtractByYear(teams: TeamWithMultipleResultType[], year: number) {
   return teams.map((team) => {
     const result = team.results.find((el) => el.year === year);
+    const { id, name, foundedYear, league } = { ...team };
     return {
-      ...team,
-      result: result,
+      id,
+      name,
+      foundedYear,
+      league,
+      result,
     };
   });
 }
 
-function SortByRank(teams) {
-  return teams.sort((a, b) => a.result.rank - b.result.rank);
+function SortByRank(teams: TeamWithSingleResultType[]) {
+  return teams.sort((a, b) => {
+    if (a.result && b.result) return a.result.rank - b.result.rank;
+    if (!a.result && b.result) return 1;
+    return -1;
+  });
 }
 
 function useApp() {
-  const [teams, setTeams] = useState([]);
+  const [teams, setTeams] = useState<TeamWithMultipleResultType[]>([]);
 
   useEffect(() => {
     getTeams().then((res) => {
-      const data = camelize(res.data.data);
+      const data: TeamWithMultipleResultType[] = camelize(res.data.data);
       setTeams(data);
     });
   }, []);

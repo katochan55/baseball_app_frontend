@@ -1,6 +1,14 @@
-export function TeamTable({ teams, color }) {
-  const topWinsCount = teams[0]?.result.winsCount;
-  const topLosesCount = teams[0]?.result.losesCount;
+import { TeamWithSingleResultType } from "./types";
+
+type Props = {
+  teams: TeamWithSingleResultType[];
+  color: string;
+};
+
+export function TeamTable({ teams, color }: Props) {
+  if (!teams[0]) return <div></div>;
+  const topWinsCount = teams[0].result ? teams[0].result.winsCount : 0;
+  const topLosesCount = teams[0].result ? teams[0].result.losesCount : 0;
   return (
     <table className="table-fixed w-3/5 my-3 border-collapse border">
       <thead>
@@ -29,19 +37,18 @@ export function TeamTable({ teams, color }) {
       </thead>
       <tbody>
         {teams.map((team) => {
-          const winsCount = team.result.winsCount;
-          const losesCount = team.result.losesCount;
+          const winsCount = team.result ? team.result.winsCount : 0;
+          const losesCount = team.result ? team.result.losesCount : 0;
           const winRate = `.${Math.trunc(
             (winsCount / (winsCount + losesCount)) * 1000
           )}`;
           const gamesBehind =
             (topWinsCount - topLosesCount - (winsCount - losesCount)) / 2;
           const formattedGamesBehind = gamesBehind === 0 ? "-" : gamesBehind;
+          const rank = team.result ? team.result.rank : "-";
           return (
             <tr key={team.id}>
-              <th className="border text-xl font-normal px-2 py-1">
-                {team.result.rank}
-              </th>
+              <th className="border text-xl font-normal px-2 py-1">{rank}</th>
               <th className="border text-xl font-normal px-2 py-1">
                 {team.name}
               </th>
