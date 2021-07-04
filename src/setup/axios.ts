@@ -1,4 +1,4 @@
-const axiosBase = require("axios");
+import axiosBase from "axios";
 
 export const axios = axiosBase.create({
   baseURL: process.env.REACT_APP_BASEBALL_BACKEND_URL,
