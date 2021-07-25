@@ -2,19 +2,19 @@ import { TeamWithSingleResultType } from "./types";
 
 type Props = {
   teams: TeamWithSingleResultType[];
-  color: string;
+  color: "green" | "blue";
 };
 
 export function TeamTable({ teams, color }: Props) {
   if (!teams[0]) return <div></div>;
+  const from = color === "green" ? "from-green-300" : "from-blue-300";
+  const to = color === "green" ? "to-green-100" : "to-blue-100";
   const topWinsCount = teams[0].result ? teams[0].result.winsCount : 0;
   const topLosesCount = teams[0].result ? teams[0].result.losesCount : 0;
   return (
     <table className="table-fixed w-3/5 my-3 border-collapse border">
       <thead>
-        <tr
-          className={`p-3 border bg-gradient-to-r from-${color}-300 to-${color}-100`}
-        >
+        <tr className={`p-3 border bg-gradient-to-r ${from} ${to}`}>
           <th className="w-1/8 border text-lg text-gray-500 font-normal px-2 py-1">
             順位
           </th>
